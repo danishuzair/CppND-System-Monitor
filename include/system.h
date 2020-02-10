@@ -3,9 +3,11 @@
 
 #include <string>
 #include <vector>
+#include <unistd.h>
 
 #include "process.h"
 #include "processor.h"
+#include "linux_parser.h"
 
 class System {
  public:
@@ -20,8 +22,12 @@ class System {
 
   // TODO: Define any necessary private members
  private:
+  float CalculateProcessUtilization(std::vector<std::string> data);
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
+  std::string operatingsystem;
+  std::string kernel;
+  const float hertz = float(sysconf(_SC_CLK_TCK));
 };
 
 #endif
