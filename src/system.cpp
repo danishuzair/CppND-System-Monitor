@@ -18,7 +18,7 @@ Processor& System::Cpu() {
     return cpu_;
 }
 
-bool compare(Process a, Process b) {return(a.CpuUtilization() >= b.CpuUtilization());}
+bool compare(Process a, Process b) {return(a.CpuUtilization() > b.CpuUtilization());}
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {

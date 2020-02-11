@@ -30,7 +30,7 @@ string LinuxParser::OperatingSystem() {
       }
     }
   }
-  return value;
+  return string();
 }
 
 // DONE: An example of how to read data from the filesystem
@@ -70,7 +70,7 @@ vector<int> LinuxParser::Pids() {
 float LinuxParser::MemoryUtilization() {
     float memoryutilization;
     std::string key, kB;
-    int memory, memorytotal, memoryfree;
+    int memory, memorytotal=1, memoryfree=0;
     string line;
     std::ifstream stream(kProcDirectory + kMeminfoFilename);
     if(stream.is_open()) {
@@ -171,7 +171,7 @@ std::vector<std::string> LinuxParser::CpuUtilization() {
 int LinuxParser::TotalProcesses() {
     string line;
     string key;
-    int value;
+    int value=0;
     std::ifstream filestream(kProcDirectory+kStatFilename);
     if (filestream.is_open()) {
         while (std::getline(filestream, line)) {
@@ -190,7 +190,7 @@ int LinuxParser::TotalProcesses() {
 int LinuxParser::RunningProcesses() {
     string line;
     string key;
-    int value;
+    int value=0;
     std::ifstream filestream(kProcDirectory+kStatFilename);
     if (filestream.is_open()) {
         while (std::getline(filestream, line)) {
@@ -212,8 +212,9 @@ string LinuxParser::Command(int pid) {
     std::ifstream stream(kProcDirectory+std::to_string(pid)+kCmdlineFilename);
     if (stream.is_open()) {
         std::getline (stream, line);
+        return line;
     }
-    return line;
+    return string();
 }
 
 // TODO: Read and return the memory used by a process
