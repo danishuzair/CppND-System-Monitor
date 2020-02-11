@@ -27,8 +27,8 @@ void Process::SetUser() {
     user = LinuxParser::User(std::stoi(uid));
 }
 
-void Process::SetCpuUtilization(float cpuutilization_) {
-    cpuutilization = cpuutilization_;
+void Process::SetCpuUtilization() {
+    cpuutilization = LinuxParser::ProcessUtilization(pid);
 }
 
 // TODO: Return this process's CPU utilization
@@ -47,7 +47,9 @@ string Process::Command() {
 
 void Process::SetRam() {
     ram = LinuxParser::Ram(pid);
-    ram = std::to_string(std::stoi(ram) / 1000);
+    if(!ram.empty()){
+        ram = std::to_string(std::stoi(ram) / 1000);
+    }
 }
 
 // TODO: Return this process's memory utilization
@@ -60,8 +62,8 @@ string Process::User() {
     return user;
 }
 
-void Process::SetUpTime(long uptime_) {
-    uptime = uptime_;
+void Process::SetUpTime() {
+    uptime = LinuxParser::UpTime(pid);
 }
 
 // TODO: Return the age of this process (in seconds)

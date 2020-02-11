@@ -13,14 +13,14 @@ class Process {
   void SetPid(int pid_);
   void SetUid();
   void SetUser();
-  void SetCpuUtilization(float cpuutilization_);
+  void SetCpuUtilization();
   std::string User();                      // TODO: See src/process.cpp
   void SetCommand();
   std::string Command();                   // TODO: See src/process.cpp
   float CpuUtilization();                  // TODO: See src/process.cpp
   void SetRam();
   std::string Ram();                       // TODO: See src/process.cpp
-  void SetUpTime (long int uptime_);
+  void SetUpTime ();
   long int UpTime();                       // TODO: See src/process.cpp
   bool operator<(Process const& a) const;  // TODO: See src/process.cpp
   std::string Uid();

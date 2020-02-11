@@ -119,8 +119,7 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-std::vector<std::string> LinuxParser::ProcessUtilization(int pid) {
-    std::vector<std::string> cpuutilization;
+float LinuxParser::ProcessUtilization(int pid) {
     string s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
     string s11, s12, s13, s14, s15, s16, s17, s18, s19, s20;
     string s21, s22;
@@ -133,12 +132,12 @@ std::vector<std::string> LinuxParser::ProcessUtilization(int pid) {
             break;
         }
     }
-    cpuutilization.push_back(s14);
-    cpuutilization.push_back(s15);
-    cpuutilization.push_back(s16);
-    cpuutilization.push_back(s17);
-    cpuutilization.push_back(s22);
-    return cpuutilization;
+
+    float hertz = float(sysconf(_SC_CLK_TCK));
+    float total_time = float(UpTime(pid)) + (std::stof(s15) + std::stof(s16) + std::stof(s17))/hertz;
+    float seconds = float(UpTime()) - (std::stof(s22)/ hertz);
+    float processutilization = (total_time / seconds);
+    return processutilization;
 }
 
 std::vector<std::string> LinuxParser::CpuUtilization() {
@@ -232,6 +231,7 @@ string LinuxParser::Ram(int pid) {
             }
         }
     }
+    return string();
 }
 
 // TODO: Read and return the user ID associated with a process
@@ -250,6 +250,7 @@ string LinuxParser::Uid(int pid) {
             }
         }
     }
+    return string();
 }
 
 // TODO: Read and return the user associated with a process
@@ -268,8 +269,26 @@ string LinuxParser::User(int uid) {
             }
         }
     }
+    return string();
 }
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) {
+    int long uptime;
+    string s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
+    string s11, s12, s13, s14, s15, s16, s17, s18, s19, s20;
+    string s21, s22;
+    string line;
+    std::ifstream stream(kProcDirectory+std::to_string(pid)+kStatFilename);
+    if (stream.is_open()) {
+        while (std::getline(stream, line)) {
+            std::istringstream linestream(line);
+            linestream>>s1>>s2>>s3>>s4>>s5>>s6>>s7>>s8>>s9>>s10>>s11>>s12>>s13>>s14>>s15>>s16>>s17>>s18>>s19>>s20>>s21>>s22;
+            break;
+        }
+    }
+    float hertz = float(sysconf(_SC_CLK_TCK));
+    uptime = std::stol(s14) / hertz;
+    return uptime;
+}

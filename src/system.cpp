@@ -20,13 +20,6 @@ Processor& System::Cpu() {
 
 bool compare(Process a, Process b) {return(a.CpuUtilization() >= b.CpuUtilization());}
 
-float System::CalculateProcessUtilization(std::vector<std::string> data) {
-    float totaltime = std::stof(data[0]) + std::stof(data[1]) + std::stof(data[2]) + std::stof(data[3]);
-    float seconds = float(System::UpTime()) - std::stof(data[4]) / hertz;
-    float cpuutilization =  ((totaltime / hertz) / seconds);
-    return cpuutilization;
-}
-
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
     vector<int> pids;
@@ -34,12 +27,11 @@ vector<Process>& System::Processes() {
     if (processes_.empty()) {
         pids = LinuxParser::Pids();
         processes_.resize(pids.size());
-        for (int i=0; i<processes_.size(); i++) {
+        for (unsigned int i=0; i<processes_.size(); i++) {
             processes_[i].SetPid(pids[i]);
             processes_[i].SetUid();
-            std::vector<std::string> data = LinuxParser::ProcessUtilization(pids[i]); //s14, s15, s16, s17, s22
-            processes_[i].SetCpuUtilization(CalculateProcessUtilization(data));
-            processes_[i].SetUpTime(std::stol(data[4]) / hertz);
+            processes_[i].SetCpuUtilization();
+            processes_[i].SetUpTime();
             processes_[i].SetCommand();
             processes_[i].SetRam();
             processes_[i].SetUser();
