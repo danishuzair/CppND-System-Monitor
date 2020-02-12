@@ -100,7 +100,7 @@ long LinuxParser::UpTime() {
     std::istringstream linestream(line);
     std::istream_iterator<string> beginning(linestream), end;
     std::vector<string> line_content(beginning, end);
-    uptime = std::stol(line_content[0]) + std::stol(line_content[1]); // + value3;
+    uptime = std::stol(line_content[0]);// + std::stol(line_content[1]); // + value3;
     return uptime;
 }
 
@@ -127,7 +127,7 @@ float LinuxParser::ProcessUtilization(int pid) {
     std::vector<string> line_content(beginning, end);
 
     float hertz = float(sysconf(_SC_CLK_TCK));
-    float total_time = float(UpTime(pid)) + (std::stof(line_content[14]) + std::stof(line_content[15]) + std::stof(line_content[16]))/hertz;
+    float total_time = (std::stof(line_content[13]) + std::stof(line_content[14]) + std::stof(line_content[15]) + std::stof(line_content[16]))/hertz;
     float seconds = float(UpTime()) - (std::stof(line_content[21])/ hertz);
     float processutilization = (total_time / seconds);
     return processutilization;
@@ -277,6 +277,6 @@ long LinuxParser::UpTime(int pid) {
     std::vector<string> line_content(beginning, end);
 
     int long hertz = sysconf(_SC_CLK_TCK);
-    int long uptime = std::stol(line_content[13]) / hertz;
+    int long uptime = UpTime() - std::stol(line_content[21]) / hertz;
     return uptime;
 }
