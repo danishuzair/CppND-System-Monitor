@@ -23,19 +23,17 @@ bool compare(Process a, Process b) {return(a.CpuUtilization() > b.CpuUtilization
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
     vector<int> pids;
-
-    if (processes_.empty()) {
-        pids = LinuxParser::Pids();
-        processes_.resize(pids.size());
-        for (unsigned int i=0; i<processes_.size(); i++) {
-            processes_[i].SetPid(pids[i]);
-            processes_[i].SetUid();
-            processes_[i].SetCpuUtilization();
-            processes_[i].SetUpTime();
-            processes_[i].SetCommand();
-            processes_[i].SetRam();
-            processes_[i].SetUser();
-        }
+    processes_.clear();
+    pids = LinuxParser::Pids();
+    processes_.resize(pids.size());
+    for (unsigned int i=0; i<processes_.size(); i++) {
+        processes_[i].SetPid(pids[i]);
+        processes_[i].SetUid();
+        processes_[i].SetCpuUtilization();
+        processes_[i].SetUpTime();
+        processes_[i].SetCommand();
+        processes_[i].SetRam();
+        processes_[i].SetUser();
     }
 
     std::sort(processes_.begin(), processes_.end(), compare);
